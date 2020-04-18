@@ -21,7 +21,7 @@ myPID.setTimeStep(1);
 }
 
 void loop() {
-motor.set_power(200);
+motor.set_power(50);
 
 data[0] = motor.get_speed();
 plot.update(data, 1);
