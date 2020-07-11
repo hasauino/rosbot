@@ -15,19 +15,22 @@ Plotter plot(100);
 
 
 void setup() {
-plot.begin(115200);  
+//plot.begin(115200);  
 motor.init(10);
-myPID.setTimeStep(1);
+//myPID.setTimeStep(1);
 }
 
 void loop() {
-setPoint = 250*sin(millis()*0.001*0.1*2*PI);
-  
-speed = rad2rpm(motor.get_speed());
-myPID.run();
-motor.set_power(output);
+  motor.set_power(0);
 
-data[0] = speed;
-data[1] = setPoint;
-plot.update(data, 2);
+//setPoint = 250*sin(millis()*0.001*0.1*2*PI);
+//  
+//speed = rad2rpm(motor.get_speed());
+//myPID.run();
+//motor.set_power(output);
+//
+//data[0] = speed;
+//data[1] = setPoint;
+//plot.update(data, 2);
+
 }

@@ -12,22 +12,22 @@ AutoPID myPID(&speed, &setPoint, &output, -100, 100, 1.0, 10.0, 0.0);
 
 
 Motor motor;
-Plotter plot(100);
+Plotter plot(500);
 
-float freq=0.1;
+float freq=0.05;
 float interval;
 unsigned long t=0, t0;
 
 void setup() {
 plot.begin(115200);  
-motor.init(10);
+motor.init(3);
 myPID.setTimeStep(1);
 }
 
 void loop() {
 while(Serial.read()!=10);
 t0 = micros();
-while (freq<=10){
+while (freq<=50){
 interval = 3000000.0*(1/freq);
 t = micros();
 while((micros() - t) < interval){
@@ -39,7 +39,7 @@ data[2] = freq;
 
 plot.update(data, 3);
 }
-freq += 0.1;
+freq += 0.05;
 }
   
 motor.set_power(0);

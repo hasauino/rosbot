@@ -1,13 +1,13 @@
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
-#include "pinout.h"
 
 #define GEAR_ENCODER_RATIO 880.0 // 20 (gear ration)x4 (quar encoder) x11 (encoder resolution)
 #define MAX_VAL_TIME 4294967296
 
 class Motor {
   private:
-    Encoder encoder{C1, C2};
+    int M1, M2, PWM, STBY;
+    Encoder encoder;
     unsigned long elapsed_us = 0;
     unsigned long speed_timer = 0;
     unsigned long speed_sampling_time = 0;
@@ -28,9 +28,14 @@ class Motor {
     }
   public:
 
-    Motor() {
+    Motor(int C1, int C2, int _PWM, int _M1, int _M2, int _STBY, ): encoder(C1, C2){
+      M1 = _M1;
+      M2 = _M2;
+      PWM = _PWM;
+      STBY = _STBY;
     }
 
+    // smapling time in milliseconds
     void init(int _speed_sampling_time = 10) {
       encoder.write(0);
       pinMode(M1, OUTPUT);
