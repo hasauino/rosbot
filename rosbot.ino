@@ -1,27 +1,42 @@
 #include "Motor.h"
-#include "helpers.h"
 #include "pinout.h"
-#include <AutoPID.h>
 
-double speed = 0.0;
-double setPoint = 200.0;
-double output = 0.0;
-AutoPID myPID(&speed, &setPoint, &output, -100, 100, 0.5, 5.0, 0.0);
+
+#define SETPOINT 0
 
 Motor right_motor(RIGHT_MOTOR_PINS);
 Motor left_motor(LEFT_MOTOR_PINS);
-
+float setpoint = 0;
 void setup() {
   Serial.begin(115200);
-  right_motor.init(10);
+  right_motor.init(3);
   //left_motor.init(10);
-  myPID.setTimeStep(20);
 }
 
 void loop() {
-  //left_motor.set_power(0);
+  char rec = Serial.read();
+  switch (rec) {
+    case '1':
+      setpoint = 0.0;
+      break;
+    case '2':
+      setpoint = 50.0;
+      break;
+    case '3':
+      setpoint = 100.0;
+      break;
+    case '4':
+      setpoint = 150.0;
+      break;
+    case '5':
+      setpoint = 200.0;
+      break;
+  }
 
-  speed = rad2rpm(right_motor.get_speed());
-  myPID.run();
-  right_motor.set_power(output);
+
+
+  right_motor.set_speed(setpoint);
+  Serial.print(setpoint);
+  Serial.print(",");
+  Serial.println(rad2rpm(right_motor.get_speed()));
 }
