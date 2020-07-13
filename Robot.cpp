@@ -34,3 +34,9 @@ float Robot::get_rightspeed() {
 float Robot::get_leftspeed() {
   return left_motor.get_speed();
 }
+
+
+void Robot::reset() {
+  right_motor.reset();
+  left_motor.reset();
+}

@@ -68,3 +68,15 @@ void Motor::set_speed(float _speed_setpoint) {
   speedPID.run();
   set_power(output * sign(_speed_setpoint));
 }
+
+
+void Motor::reset() {
+  encoder.write(0);
+  count = 0;
+  delta_angle = 0.0;
+  speed = 0.0;
+  abs_speed = 0.0;
+  speed_setpoint = 0.0;
+  output = 0.0;
+  speedPID.reset();
+}

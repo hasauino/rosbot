@@ -47,6 +47,8 @@ class Motor {
     void set_power(double pwr);
 
     void set_speed(float _speed_setpoint);
+
+    void reset();
 };//Motor class
 
 #endif

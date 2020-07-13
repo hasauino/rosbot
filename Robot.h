@@ -30,6 +30,9 @@ class Robot {
     float get_rightspeed();
     float get_leftspeed();
 
+    // reset motors and odometry
+    void reset();
+
 };
 
 
