@@ -24,7 +24,7 @@ void Motor::init(int _speed_sampling_time = 10) {
   digitalWrite(STBY, HIGH);
   speed_microtimer.init();
   speed_sampling_time = _speed_sampling_time;
-  speedPID.setTimeStep(2*speed_sampling_time);
+  speedPID.setTimeStep(2 * speed_sampling_time);
 }
 
 long Motor::get_count() {
@@ -60,4 +60,11 @@ void Motor::set_power(double pwr) {
   else {
     analogWrite(PWM, 255);
   }
+}
+
+void Motor::set_speed(float _speed_setpoint) {
+  get_speed();
+  speed_setpoint = _speed_setpoint;
+  speedPID.run();
+  set_power(output);
 }

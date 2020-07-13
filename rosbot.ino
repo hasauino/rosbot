@@ -35,7 +35,7 @@ void loop() {
 
 
 
-  right_motor.set_speed(setpoint);
+  right_motor.set_speed(rad2rpm(setpoint));
   Serial.print(setpoint);
   Serial.print(",");
   Serial.println(rad2rpm(right_motor.get_speed()));
