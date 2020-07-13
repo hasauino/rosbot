@@ -66,5 +66,5 @@ void Motor::set_speed(float _speed_setpoint) {
   abs_speed = abs(get_speed());
   speed_setpoint = abs(_speed_setpoint);
   speedPID.run();
-  set_power(output*sign(_speed_setpoint));
+  set_power(output * sign(_speed_setpoint));
 }

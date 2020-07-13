@@ -28,3 +28,7 @@ Head Servo
 Battery voltage
 */
 #define BATTERY_VOLTAGE A0
+
+// shortcut for motor pins
+#define RIGHT_MOTOR_PINS C1_RIGHT, C2_RIGHT, PWM_RIGHT, M1_RIGHT, M2_RIGHT, STBY_RIGHT
+#define LEFT_MOTOR_PINS C1_LEFT, C2_LEFT, PWM_LEFT, M1_LEFT, M2_LEFT, STBY_LEFT

@@ -17,36 +17,18 @@ class Robot {
     float wl = 0.0;
 
   public:
-    Robot():
-      right_motor(RIGHT_MOTOR_PINS),
-      left_motor(LEFT_MOTOR_PINS) {}
+    Robot();
 
-    void init() {
-      right_motor.init(ENCODER_SPEED_SAMPLING);
-      left_motor.init(ENCODER_SPEED_SAMPLING);
-    }
+    void init();
     /* set robot speed. Takes: v (m/s linear speed in forward direction),
        and w (rad/s, angular speed around z axis).
     */
-    void set_speed(float v, float w) {
-      wr = -(v + 0.5 * ROBOT_WIDTH * w) / WHEEL_RADIUS; // v/w (negative since motor rotation is opposite to robot motion)
-      wl = (v - 0.5 * ROBOT_WIDTH * w) / WHEEL_RADIUS;
-      right_motor.set_speed(wr);
-      left_motor.set_speed(wl);
-    }
+    void set_speed(float v, float w);
 
-    void set_rightspeed(float w) {
-      right_motor.set_speed(w);
-    }
-    void set_leftspeed(float w) {
-      left_motor.set_speed(w);
-    }
-    float get_rightspeed() {
-      return right_motor.get_speed();
-    }
-    float get_leftspeed() {
-      return left_motor.get_speed();
-    }
+    void set_rightspeed(float w);
+    void set_leftspeed(float w);
+    float get_rightspeed();
+    float get_leftspeed();
 
 };
 

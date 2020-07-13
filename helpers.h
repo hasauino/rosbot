@@ -2,15 +2,11 @@
 #define HELPERS_H
 
 #include <Arduino.h>
-#include "pinout.h"
 
 
 #define rad2deg(x) x*180.0/PI
 #define rad2rpm(x) x*(30.0/PI)
 #define rpm2rad(x) x*2.0*PI/60.0
-
-#define RIGHT_MOTOR_PINS C1_RIGHT, C2_RIGHT, PWM_RIGHT, M1_RIGHT, M2_RIGHT, STBY_RIGHT
-#define LEFT_MOTOR_PINS C1_LEFT, C2_LEFT, PWM_LEFT, M1_LEFT, M2_LEFT, STBY_LEFT
 
 #define MAX_VAL_TIME 4294967296
 
