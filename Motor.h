@@ -25,6 +25,7 @@ class Motor {
     long count = 0;
     float delta_angle = 0.0;
     double speed = 0.0;
+    double abs_speed = 0.0;
     double speed_setpoint = 0.0;
     double output = 0.0;
     AutoPID speedPID;
@@ -36,7 +37,7 @@ class Motor {
 
     Motor(int C1, int C2, int _PWM, int _M1, int _M2, int _STBY);
 
-    // smapling time in milliseconds
+    // sampling time in milliseconds
     void init(int _speed_sampling_time = 10);
 
     float get_position();

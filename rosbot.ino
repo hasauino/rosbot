@@ -1,42 +1,43 @@
-#include "Motor.h"
-#include "pinout.h"
+#include "Robot.h"
 
-
-#define SETPOINT 0
-
-Motor right_motor(RIGHT_MOTOR_PINS);
-Motor left_motor(LEFT_MOTOR_PINS);
-float setpoint = 0;
+Robot robot;
+float v = 0, w = 0;
 void setup() {
   Serial.begin(115200);
-  right_motor.init(3);
-  //left_motor.init(10);
+  robot.init();
 }
 
 void loop() {
   char rec = Serial.read();
   switch (rec) {
     case '1':
-      setpoint = 0.0;
+      v = 0.0;
       break;
     case '2':
-      setpoint = 50.0;
+      v = 0.2;
       break;
     case '3':
-      setpoint = 100.0;
+      v = 0.3;
       break;
     case '4':
-      setpoint = 150.0;
+      v = 0.4;
       break;
     case '5':
-      setpoint = 200.0;
+      v = 0.5;
+      break;
+    case '6':
+      v = 0.6;
+      break;
+    case '7':
+      v = 0.7;
+      break;
+    case '8':
+      v = 0.8;
+      break;
+    case '9':
+      v = 0.9;
       break;
   }
 
-
-
-  right_motor.set_speed(rad2rpm(setpoint));
-  Serial.print(setpoint);
-  Serial.print(",");
-  Serial.println(rad2rpm(right_motor.get_speed()));
+  robot.set_speed(v, w);
 }

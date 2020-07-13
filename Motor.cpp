@@ -4,7 +4,7 @@
 
 Motor::Motor(int C1, int C2, int _PWM, int _M1, int _M2, int _STBY)
   : encoder(C1, C2),
-    speedPID(&speed, &speed_setpoint, &output, MIN_OUT, MAX_OUT, KP, KI, KD) {
+    speedPID(&abs_speed, &speed_setpoint, &output, MIN_OUT, MAX_OUT, KP, KI, KD) {
   M1 = _M1;
   M2 = _M2;
   PWM = _PWM;
@@ -63,8 +63,8 @@ void Motor::set_power(double pwr) {
 }
 
 void Motor::set_speed(float _speed_setpoint) {
-  get_speed();
-  speed_setpoint = _speed_setpoint;
+  abs_speed = abs(get_speed());
+  speed_setpoint = abs(_speed_setpoint);
   speedPID.run();
-  set_power(output);
+  set_power(output*sign(_speed_setpoint));
 }
