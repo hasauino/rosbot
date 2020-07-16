@@ -6,15 +6,10 @@
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 
-#define MSG_FIRST_BYTE 123 // first byte in received message (0x7B)
-#define MSG_SECOND_BYTE 55 // second byte in received message (0x37)
-#define MSG_BUFFER_LENGTH 50
+#include "protocol.h"
 
-/* commands */
-#define SET_VELOCITY 'V' // message type is command
 
 class Receiver {
-
 
   private:
     /*
