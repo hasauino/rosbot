@@ -14,27 +14,24 @@ void setup() {
 
 void loop() {
   if (receiver.available()) {
-    Serial.println("yes, available!");
     msg = receiver.latest_msg();
 
     // counter from 3 (after msg length byte, and before the last checksum byte)
     for (int i = 3; i < msg[2] + 2;) {
       switch (msg[i]) {
         case vel_msg.ID:
-          Serial.println("yes, velocity!");
           vel_msg.deserialize(msg[i + 1]); //serialize the following bytes (equal to vel_msg.length bytes) starting from i+1
           i += vel_msg.length;
           break;
 
         default:
-          Serial.println("not velocity!");
           i++;
       }
     }
   }
   //robot.set_speed(vel_msg.v, vel_msg.w);
   Serial.print(vel_msg.v); Serial.print("  |  "); Serial.println(vel_msg.w);
-  delay(100);
+  delay(10);
 }
 
 

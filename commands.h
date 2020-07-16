@@ -18,14 +18,14 @@ class Velocity {
     static const byte ID = VELOCITY_COMMAND;
     float v = 0.0, w = 0.0;
     void deserialize(byte &data) {
-      V.asBytes[0] = 0x3E;//(&data)[0];
-      V.asBytes[1] = 0x99;//(&data)[1];
-      V.asBytes[2] = 0x99;//(&data)[2];
-      V.asBytes[3] = 0x9A;//(&data)[3];
-      W.asBytes[0] = (&data)[4];
-      W.asBytes[1] = (&data)[5];
-      W.asBytes[2] = (&data)[6];
-      W.asBytes[3] = (&data)[7];
+      V.asBytes[3] = (&data)[0];
+      V.asBytes[2] = (&data)[1];
+      V.asBytes[1] = (&data)[2];
+      V.asBytes[0] = (&data)[3];
+      W.asBytes[3] = (&data)[4];
+      W.asBytes[2] = (&data)[5];
+      W.asBytes[1] = (&data)[6];
+      W.asBytes[0] = (&data)[7];
 
       v = V.asFloat;
       w = W.asFloat;
