@@ -29,9 +29,7 @@ void loop() {
       }
     }
   }
-  //robot.set_speed(vel_msg.v, vel_msg.w);
-  Serial.print(vel_msg.v); Serial.print("  |  "); Serial.println(vel_msg.w);
-  delay(10);
+  robot.set_speed(vel_msg.v, vel_msg.w);
 }
 
 
