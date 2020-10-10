@@ -16,7 +16,7 @@ def cb(msg):
 
 
 rospy.init_node('driver_sample')
-ser = serial.Serial('/dev/ttyUSB0', 115200)  # open serial port
+ser = serial.Serial('/dev/ttyAMA0', 115200)  # open serial port
 
 rate = rospy.Rate(100)
 
