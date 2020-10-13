@@ -7,7 +7,7 @@
 #define COMMUNICATION_H
 
 #include "protocol.h"
-
+#include <Arduino.h>
 
 class Receiver {
 
@@ -88,4 +88,85 @@ class Receiver {
     }
 };
 
+
+class Transmitter {
+
+  private:
+    unsigned int rate = 20; // transmission rate in Hz
+    byte index = 0;
+    unsigned long timer = 0;
+    byte buffer[MSG_BUFFER_LENGTH];
+    union {
+      float asFloat;
+      byte asBytes[4];
+    } float_variable;
+
+    byte int_serialized[2];
+
+    byte byte_serialized[1];
+
+    byte* serialize(float var) {
+      float_variable.asFloat = var;
+      return float_variable.asBytes;
+    }
+    byte* serialize(int var) {
+      int_serialized[0] = var;
+      int_serialized[1] = var>>8;
+      return int_serialized;
+    }
+
+    byte* serialize(byte var) {
+      byte_serialized[0] = var;
+      return byte_serialized;
+    }    
+
+    void push_data(byte &data, unsigned int length) {
+      for (int i = 1; i <= length; i++) {
+        buffer[index] = (&data)[index];
+        index++;
+      }
+    }
+
+
+  public:
+    void _push_data(byte &data, unsigned int length) {
+      for (int i = 1; i <= length; i++) {
+        buffer[index] = (&data)[index];
+        index++;
+      }
+    }
+    
+    Transmitter() {}
+
+    void push(float var) {
+      byte* data = serialize(var);
+      push_data(data[0], 4); // this is CPU dependent (float assumed 4 bytes in size)
+    }
+
+    void push(int var) {
+      byte* data = serialize(var);
+      push_data(data[0], 2); // this is CPU dependent (int assumed 2 bytes in size)
+    }
+    void push(byte var) {
+      byte* data = serialize(var);
+      push_data(data[0], 1);
+    }
+
+    void flush() {
+      index = 0;
+    }
+    void send() {
+      if (millis() - timer > 1000.0 / float(rate)) {
+        timer = millis();
+        Serial.write(MSG_FIRST_BYTE);
+        Serial.write(MSG_SECOND_BYTE);
+        Serial.write(index);
+        for (int i = 0; i < index; i++) {
+          Serial.write(buffer[i]);
+        }
+        Serial.write(0); //TODO: Checksum
+      }
+      flush();
+    }
+};
 #endif

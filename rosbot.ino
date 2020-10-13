@@ -4,6 +4,7 @@
 
 Robot robot;
 Receiver receiver;
+Transmitter transmitter;
 Velocity vel_msg;
 byte* msg;
 
@@ -30,6 +31,12 @@ void loop() {
     }
   }
   robot.set_speed(vel_msg.v, vel_msg.w);
+  byte d1[3] = {0xA1, 0xA2, 0xA3};
+  transmitter._push_data(d1[0], 3);
+  
+  byte d2[3] = {0xA4, 0xA5, 0xA6};
+  transmitter._push_data(d2[0], 3);
+  transmitter.send();
 }
 
 
