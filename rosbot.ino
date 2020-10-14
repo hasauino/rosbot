@@ -32,19 +32,12 @@ void loop() {
   }
   robot.set_speed(vel_msg.v, vel_msg.w);
 
-
-
-
-  transmitter.push(float(10.5));
-  transmitter.push(byte(0xCC));
-  transmitter.push(float(2.35));
-  transmitter.push(int(0xBBAA));
-
+  // Send odometry
+  transmitter.push(robot.get_rightposition());
+  transmitter.push(robot.get_leftposition());
+  transmitter.push(robot.get_rightspeed());
+  transmitter.push(robot.get_leftspeed());
   transmitter.send();
-
-  /*byte d2[3] = {0xA4, 0xA5, 0xA6};
-    transmitter._push_data(d2[0], 3);
-    transmitter.send();*/
 }
 
 

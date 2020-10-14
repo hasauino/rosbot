@@ -98,6 +98,7 @@ class Transmitter {
     byte buffer[MSG_BUFFER_LENGTH];
     union {
       float asFloat;
+      double asDouble;
       byte asBytes[4];
     } float_variable;
 
@@ -107,6 +108,10 @@ class Transmitter {
 
     byte* serialize(float var) {
       float_variable.asFloat = var;
+      return float_variable.asBytes;
+    }
+    byte* serialize(double var) {
+      float_variable.asDouble = var;
       return float_variable.asBytes;
     }
     byte* serialize(int var) {
@@ -135,6 +140,11 @@ class Transmitter {
     void push(float var) {
       byte* data = serialize(var);
       push_data(data[0], 4); // this is CPU dependent (float assumed 4 bytes in size)
+    }
+
+    void push(double var) {
+      byte* data = serialize(var);
+      push_data(data[0], 4); // this is CPU dependent (double assumed 4 bytes in size)
     }
 
     void push(int var) {
