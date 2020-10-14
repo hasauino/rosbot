@@ -31,12 +31,20 @@ void loop() {
     }
   }
   robot.set_speed(vel_msg.v, vel_msg.w);
-  byte d1[3] = {0xA1, 0xA2, 0xA3};
-  transmitter._push_data(d1[0], 3);
-  
-  byte d2[3] = {0xA4, 0xA5, 0xA6};
-  transmitter._push_data(d2[0], 3);
+
+
+
+
+  transmitter.push(float(10.5));
+  transmitter.push(byte(0xCC));
+  transmitter.push(float(2.35));
+  transmitter.push(int(0xBBAA));
+
   transmitter.send();
+
+  /*byte d2[3] = {0xA4, 0xA5, 0xA6};
+    transmitter._push_data(d2[0], 3);
+    transmitter.send();*/
 }
 
 

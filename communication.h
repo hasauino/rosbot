@@ -111,31 +111,25 @@ class Transmitter {
     }
     byte* serialize(int var) {
       int_serialized[0] = var;
-      int_serialized[1] = var>>8;
+      int_serialized[1] = var >> 8;
       return int_serialized;
     }
 
     byte* serialize(byte var) {
       byte_serialized[0] = var;
       return byte_serialized;
-    }    
+    }
 
     void push_data(byte &data, unsigned int length) {
-      for (int i = 1; i <= length; i++) {
-        buffer[index] = (&data)[index];
+      for (int i = 0; i < length; i++) {
+        buffer[index] = (&data)[i];
         index++;
       }
     }
 
 
   public:
-    void _push_data(byte &data, unsigned int length) {
-      for (int i = 1; i <= length; i++) {
-        buffer[index] = (&data)[index];
-        index++;
-      }
-    }
-    
+
     Transmitter() {}
 
     void push(float var) {
