@@ -159,17 +159,21 @@ class Transmitter {
     void flush() {
       index = 0;
     }
+
+    bool check_rate() {
+      return millis() - timer > 1000.0 / float(rate);
+    }
+
     void send() {
-      if (millis() - timer > 1000.0 / float(rate)) {
-        timer = millis();
-        Serial.write(MSG_FIRST_BYTE);
-        Serial.write(MSG_SECOND_BYTE);
-        Serial.write(index);
-        for (int i = 0; i < index; i++) {
-          Serial.write(buffer[i]);
-        }
-        Serial.write(0); //TODO: Checksum
+
+      timer = millis();
+      Serial.write(MSG_FIRST_BYTE);
+      Serial.write(MSG_SECOND_BYTE);
+      Serial.write(index);
+      for (int i = 0; i < index; i++) {
+        Serial.write(buffer[i]);
       }
+      Serial.write(0); //TODO: Checksum
       flush();
     }
 };

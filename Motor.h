@@ -29,6 +29,8 @@ class Motor {
     double speed_setpoint = 0.0;
     double output = 0.0;
     AutoPID speedPID;
+    long _count = 0; // faster/instant update, no sampling rate
+    float _delta_angle = 0.0; // faster/instant update, no sampling rate
     MicrosecondsTimer speed_microtimer;
 
     long get_count();
@@ -41,6 +43,8 @@ class Motor {
     void init(int _speed_sampling_time = 10);
 
     float get_position();
+
+    float delta_theta();
 
     float get_speed();
 

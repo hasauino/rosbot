@@ -32,6 +32,8 @@ class Robot {
     float get_leftspeed();
     float get_leftposition();
     float get_rightposition();
+    float delta_s_r();
+    float delta_s_l();
 
     // reset motors and odometry
     void reset();

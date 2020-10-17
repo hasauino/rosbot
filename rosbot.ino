@@ -33,11 +33,13 @@ void loop() {
   robot.set_speed(vel_msg.v, vel_msg.w);
 
   // Send odometry
-  transmitter.push(robot.get_rightposition());
-  transmitter.push(robot.get_leftposition());
-  transmitter.push(robot.get_rightspeed());
-  transmitter.push(robot.get_leftspeed());
-  transmitter.send();
+  if (transmitter.check_rate()) {
+    transmitter.push(robot.delta_s_r());
+    transmitter.push(robot.delta_s_l());
+    transmitter.push(robot.get_rightspeed());
+    transmitter.push(robot.get_leftspeed());
+    transmitter.send();
+  }
 }
 
 

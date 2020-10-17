@@ -43,6 +43,14 @@ float Robot::get_rightposition() {
   return right_motor.get_position();
 }
 
+float Robot::delta_s_r() {
+  return right_motor.delta_theta() * WHEEL_RADIUS;
+}
+
+float Robot::delta_s_l() {
+  return left_motor.delta_theta() * WHEEL_RADIUS;
+}
+
 
 void Robot::reset() {
   right_motor.reset();

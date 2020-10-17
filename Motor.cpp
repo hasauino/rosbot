@@ -35,6 +35,12 @@ float Motor::get_position() {
   return (encoder.read() / GEAR_ENCODER_RATIO) * 2.0 * PI;
 }
 
+float Motor::delta_theta() {
+  _delta_angle = ((encoder.read() - _count) / GEAR_ENCODER_RATIO) * 2.0 * PI;
+  _count = encoder.read();
+  return _delta_angle;
+}
+
 float Motor::get_speed() {
   if (millis() - speed_timer >= speed_sampling_time) {
     delta_angle = ((encoder.read() - count) / GEAR_ENCODER_RATIO) * 2.0 * PI;
