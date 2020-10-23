@@ -1,6 +1,6 @@
 /* Pins availability
 //Pin:      0   1   2   3   4   5   6   7   8   9   10    11    12    13    A0    A1    A2    A3    A4    A5    A6    A7
-//state:    X   X   X   X   X   X   X   X   X   X   X     X     X     X     X     X                 F     F     F     F
+//state:    X   X   X   X   X   X   X   X   X   X   X     X     X     X     X     X                 X     X     F     F
 
 /*
 Right Motor
@@ -24,6 +24,11 @@ Left Motor
 Head Servo
 */
 #define HEAD_SERVO 9
+/*
+IMU MPU-6050 (GY-521)
+*/
+#define SDA A4
+#define SCL A5
 /*
 Battery voltage
 */
