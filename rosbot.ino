@@ -1,16 +1,21 @@
 #include "Robot.h"
 #include "communication.h"
 #include "commands.h"
+#include "IMU.h"
 
 Robot robot;
+IMU imu;
 Receiver receiver;
 Transmitter transmitter;
 Velocity vel_msg;
 byte* msg;
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
 
 void setup() {
-  Serial.begin(115200);
   robot.init();
+  imu.init();
+  Serial.begin(115200);
 }
 
 void loop() {
@@ -32,12 +37,20 @@ void loop() {
   }
   robot.set_speed(vel_msg.v, vel_msg.w);
 
-  // Send odometry
+  // Send odometry, IMU
   if (transmitter.check_rate()) {
     transmitter.push(robot.delta_s_r());
     transmitter.push(robot.delta_s_l());
     transmitter.push(robot.get_rightspeed());
     transmitter.push(robot.get_leftspeed());
+    imu.getData(ax, ay, az, gx, gy, gz);
+    transmitter.push(ax);
+    transmitter.push(ay);
+    transmitter.push(az);
+    transmitter.push(gx);
+    transmitter.push(gy);
+    transmitter.push(gz);
+    transmitter.push(imu.getTemp());
     transmitter.send();
   }
 }
