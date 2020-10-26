@@ -9,6 +9,7 @@
 /* command IDs */
 #define VELOCITY_COMMAND 0x00
 #define HEAD_COMMAND 0x01
-#define STARTSTREAM_COMMAND 0x027b
+#define STARTSTREAM_COMMAND 0x02
+#define HEAD_COMMAND 0x03
 
 #endif

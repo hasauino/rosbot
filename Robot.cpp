@@ -9,6 +9,7 @@ Robot::Robot():
 void Robot::init() {
   right_motor.init(ENCODER_SPEED_SAMPLING);
   left_motor.init(ENCODER_SPEED_SAMPLING);
+  head.attach(HEAD_SERVO);
 }
 
 void Robot::set_speed(float v, float w) {
@@ -51,6 +52,12 @@ float Robot::delta_s_l() {
   return left_motor.delta_theta() * WHEEL_RADIUS;
 }
 
+void Robot::set_head(int _angle) {
+  if (_angle != head_angle && _angle <= 180 && _angle >= 0) {
+    head_angle = _angle;
+    head.write(head_angle);
+  }
+}
 
 void Robot::reset() {
   right_motor.reset();

@@ -1,6 +1,7 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
+#include <Servo.h>
 #include "Motor.h"
 #include "pinout.h"
 
@@ -16,6 +17,8 @@ class Robot {
     Motor left_motor;
     float wr = 0.0;
     float wl = 0.0;
+    int head_angle = 90;
+    Servo head;
 
   public:
     Robot();
@@ -34,6 +37,7 @@ class Robot {
     float get_rightposition();
     float delta_s_r();
     float delta_s_l();
+    void set_head(int _angle);
 
     // reset motors and odometry
     void reset();

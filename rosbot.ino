@@ -6,9 +6,11 @@
 Robot robot;
 IMU imu;
 Receiver receiver;
+// Command msgs definitions
 Transmitter transmitter;
 Velocity vel_msg;
 StartStream start_msg;
+Head head_msg;
 byte* msg;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
@@ -36,13 +38,19 @@ void loop() {
           i += start_msg.length;
           break;
 
+        case head_msg.ID:
+          head_msg.deserialize(msg[i + 1]); //serialize the following bytes (equal to vel_msg.length bytes) starting from i+1
+          i += head_msg.length;
+          break;
+
         default:
           i++;
       }
     }
   }
   robot.set_speed(vel_msg.v, vel_msg.w);
-
+  robot.set_head(head_msg.angle);
+  
   // Send odometry, IMU
   if (start_msg.is_enabled && transmitter.check_rate()) {
     transmitter.push(robot.delta_s_r());

@@ -38,7 +38,6 @@ class StartStream {
     bool is_enabled = false;
     static const byte length = 1;
     static const byte ID = STARTSTREAM_COMMAND;
-    float v = 0.0, w = 0.0;
     void deserialize(byte data) {
       if (data == 0xFF) {
         is_enabled = true;
@@ -46,6 +45,16 @@ class StartStream {
       else {
         is_enabled = false;
       }
+    }
+};
+
+class Head {
+  public:
+    int angle = -1;
+    static const byte length = 1;
+    static const byte ID = HEAD_COMMAND;
+    void deserialize(byte data) {
+      angle = int(data);
     }
 };
 
