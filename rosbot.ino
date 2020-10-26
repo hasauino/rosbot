@@ -8,6 +8,7 @@ IMU imu;
 Receiver receiver;
 Transmitter transmitter;
 Velocity vel_msg;
+StartStream start_msg;
 byte* msg;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
@@ -30,6 +31,11 @@ void loop() {
           i += vel_msg.length;
           break;
 
+        case start_msg.ID:
+          start_msg.deserialize(msg[i + 1]); //serialize the following bytes (equal to vel_msg.length bytes) starting from i+1
+          i += start_msg.length;
+          break;
+
         default:
           i++;
       }
@@ -38,7 +44,7 @@ void loop() {
   robot.set_speed(vel_msg.v, vel_msg.w);
 
   // Send odometry, IMU
-  if (transmitter.check_rate()) {
+  if (start_msg.is_enabled && transmitter.check_rate()) {
     transmitter.push(robot.delta_s_r());
     transmitter.push(robot.delta_s_l());
     transmitter.push(robot.get_rightspeed());

@@ -32,6 +32,23 @@ class Velocity {
     }
 };
 
+
+class StartStream {
+  public:
+    bool is_enabled = false;
+    static const byte length = 1;
+    static const byte ID = STARTSTREAM_COMMAND;
+    float v = 0.0, w = 0.0;
+    void deserialize(byte data) {
+      if (data == 0xFF) {
+        is_enabled = true;
+      }
+      else {
+        is_enabled = false;
+      }
+    }
+};
+
 //-------------------
 
 
