@@ -71,6 +71,8 @@ void Motor::set_power(double pwr) {
 void Motor::set_speed(float _speed_setpoint) {
   abs_speed = abs(get_speed());
   speed_setpoint = abs(_speed_setpoint);
+  // reset PID (I and D terms) upon stopping the motor
+  if (speed_setpoint == 0){speedPID.reset();}
   speedPID.run();
   set_power(output * sign(_speed_setpoint));
 }
