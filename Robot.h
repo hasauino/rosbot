@@ -8,7 +8,7 @@
 #define ENCODER_SPEED_SAMPLING 3 // milliseconds, do not update speed if get_speed is called faster than this
 #define ROBOT_WIDTH 0.12 // meters (120 mm)
 #define WHEEL_RADIUS 0.02783619955
-
+#define HEAD_INIT 90
 
 class Robot {
 
@@ -17,7 +17,7 @@ class Robot {
     Motor left_motor;
     float wr = 0.0;
     float wl = 0.0;
-    int head_angle = 90;
+    int head_angle = HEAD_INIT;
     Servo head;
 
   public:

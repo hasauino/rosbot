@@ -52,7 +52,7 @@ void loop() {
   robot.set_head(head_msg.angle);
   
   // Send odometry, IMU
-  if (start_msg.is_enabled && transmitter.check_rate()) {
+  if (transmitter.check_rate()) {
     transmitter.push(robot.delta_s_r());
     transmitter.push(robot.delta_s_l());
     transmitter.push(robot.get_rightspeed());

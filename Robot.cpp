@@ -10,6 +10,7 @@ void Robot::init() {
   right_motor.init(ENCODER_SPEED_SAMPLING);
   left_motor.init(ENCODER_SPEED_SAMPLING);
   head.attach(HEAD_SERVO);
+  head.write(HEAD_INIT);
 }
 
 void Robot::set_speed(float v, float w) {
