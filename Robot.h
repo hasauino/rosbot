@@ -5,7 +5,8 @@
 #include "Motor.h"
 #include "pinout.h"
 
-#define ENCODER_SPEED_SAMPLING 3 // milliseconds, do not update speed if get_speed is called faster than this
+#define ENCODER_SAMPLING 100 // milliseconds, do not update speed if get_speed is called faster than this
+#define MOTOR_CONTROL_LOOP_DURATION 5 // milliseconds
 #define ROBOT_WIDTH 0.12 // meters (120 mm)
 #define WHEEL_RADIUS 0.02783619955
 #define HEAD_INIT 90

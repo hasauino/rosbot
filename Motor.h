@@ -1,7 +1,7 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 #include <Arduino.h>
-//#define ENCODER_OPTIMIZE_INTERRUPTS
+// #define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
 #include "helpers.h"
 #include <AutoPID.h>
@@ -13,46 +13,45 @@
 #define MAX_OUT 100
 #define MIN_OUT 0
 
+class Motor
+{
 
-class Motor {
+private:
+  int M1, M2, PWM, STBY;
+  Encoder encoder;
+  unsigned long speed_timer = 0;
+  unsigned long sampling_time = 0;
+  long count = 0;
+  float delta_angle = 0.0;
+  double speed = 0.0;
+  double abs_speed = 0.0;
+  double speed_setpoint = 0.0;
+  double output = 0.0;
+  AutoPID speedPID;
+  MicrosecondsTimer speed_microtimer;
 
-  private:
+  long get_count();
 
-    int M1, M2, PWM, STBY;
-    Encoder encoder;
-    unsigned long speed_timer = 0;
-    unsigned long speed_sampling_time = 0;
-    long count = 0;
-    float delta_angle = 0.0;
-    double speed = 0.0;
-    double abs_speed = 0.0;
-    double speed_setpoint = 0.0;
-    double output = 0.0;
-    AutoPID speedPID;
-    long _count = 0; // faster/instant update, no sampling rate
-    float _delta_angle = 0.0; // faster/instant update, no sampling rate
-    MicrosecondsTimer speed_microtimer;
+public:
+  Motor(int C1, int C2, int _PWM, int _M1, int _M2, int _STBY);
 
-    long get_count();
+  // sampling time in milliseconds
+  void init(int _sampling_time = 10 , int control_step_time = 5);
 
-  public:
+  float get_position();
 
-    Motor(int C1, int C2, int _PWM, int _M1, int _M2, int _STBY);
+  float delta_theta();
 
-    // sampling time in milliseconds
-    void init(int _speed_sampling_time = 10);
+  float get_speed();
 
-    float get_position();
+  void set_power(double pwr);
 
-    float delta_theta();
+  void set_speed(float _speed_setpoint);
 
-    float get_speed();
+  void reset();
 
-    void set_power(double pwr);
-
-    void set_speed(float _speed_setpoint);
-
-    void reset();
-};//Motor class
+private:
+  void sample();
+}; // Motor class
 
 #endif

@@ -92,7 +92,7 @@ class Receiver {
 class Transmitter {
 
   private:
-    unsigned int rate = 20; // transmission rate in Hz
+    unsigned int rate = 200; // transmission rate in Hz
     byte index = 0;
     unsigned long timer = 0;
     byte buffer[MSG_BUFFER_LENGTH];
