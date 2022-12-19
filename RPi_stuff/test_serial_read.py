@@ -4,16 +4,17 @@ import argparse
 import logging
 
 ser = serial.Serial('/dev/ttyS0', 115200)
-
+FIRST_BYTE = 0x7B
+SECOND_BYTE = 0x37
 
 def main():
     while True:
         logger.debug("reading a line ...")
         rec = ser.read()[0]
-        if rec != 0x7B:
+        if rec != FIRST_BYTE:
             continue
         rec = ser.read()[0]
-        if rec != 0x37:
+        if rec != SECOND_BYTE:
             continue
         length = ser.read()[0]
         data = ser.read(length)
