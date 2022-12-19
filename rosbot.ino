@@ -19,6 +19,7 @@ void setup() {
   robot.init();
   imu.init();
   Serial.begin(115200);
+  robot.reset();
 }
 
 void loop() {
