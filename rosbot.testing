@@ -1,0 +1,15 @@
+#include "Robot.h"
+
+Motor motor(RIGHT_MOTOR_PINS);
+
+
+void setup() {
+  motor.init(100, 5);
+  Serial.begin(115200);
+}
+
+void loop() {
+  motor.set_speed(0);
+  Serial.println(motor.get_speed());
+  delay(5);
+}

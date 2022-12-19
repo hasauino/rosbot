@@ -1,8 +1,8 @@
 #include "Motor.h"
 
 Motor::Motor(int C1, int C2, int _PWM, int _M1, int _M2, int _STBY)
-    : encoder(C1, C2),
-      speedPID(&abs_speed, &speed_setpoint, &output, MIN_OUT, MAX_OUT, KP, KI, KD)
+  : encoder(C1, C2),
+    speedPID(&abs_speed, &speed_setpoint, &output, MIN_OUT, MAX_OUT, KP, KI, KD)
 {
   M1 = _M1;
   M2 = _M2;
@@ -10,7 +10,7 @@ Motor::Motor(int C1, int C2, int _PWM, int _M1, int _M2, int _STBY)
   STBY = _STBY;
 }
 
-void Motor::init(int _sampling_time, int control_step_time)
+void Motor::init(int sampling_time, int control_step_time)
 {
   encoder.write(0);
   pinMode(M1, OUTPUT);
@@ -21,13 +21,9 @@ void Motor::init(int _sampling_time, int control_step_time)
   digitalWrite(M1, LOW);
   digitalWrite(PWM, LOW);
   digitalWrite(STBY, HIGH);
-  speed_microtimer.init();
-  /*
-  a sampling time of 100 ms (10 hz) results in error of 0.43 % in computed travel distance at robot speed of 1 m/s
-  a sampling time of 50  ms (20 hz) results in error of 0.86 % in computed travel distance at robot speed of 1 m/s
-  */
-  sampling_time = _sampling_time;
   speedPID.setTimeStep(control_step_time);
+  slow_sample.init(sampling_time);
+  fast_sample.init(control_step_time);
 }
 
 long Motor::get_count()
@@ -40,27 +36,32 @@ float Motor::get_position()
   return (encoder.read() / GEAR_ENCODER_RATIO) * 2.0 * PI;
 }
 
-void Motor::sample()
+void Motor::update()
 {
-  if (millis() - speed_timer >= sampling_time)
-  {
-    delta_angle = ((encoder.read() - count) / GEAR_ENCODER_RATIO) * 2.0 * PI;
-    count = encoder.read();
-    speed = (delta_angle / speed_microtimer.duration()) * 1000000.0;
-    speed_timer = millis();
+  fast_sample.update(encoder);
+  slow_sample.update(encoder);
+}
+
+float Motor::delta_theta(bool fast)
+{
+  if (fast)
+  { fast_sample.update(encoder);
+    return fast_sample.delta_angle;
   }
+
+  slow_sample.update(encoder);
+  return slow_sample.delta_angle;
 }
 
-float Motor::delta_theta()
+float Motor::get_speed(bool fast)
 {
-  sample();
-  return delta_angle;
-}
+  if (fast) {
+    fast_sample.update(encoder);
+    return fast_sample.speed;
+  }
 
-float Motor::get_speed()
-{
-  sample();
-  return speed;
+  slow_sample.update(encoder);
+  return slow_sample.speed;
 }
 
 void Motor::set_power(double pwr)
@@ -87,7 +88,7 @@ void Motor::set_power(double pwr)
 
 void Motor::set_speed(float _speed_setpoint)
 {
-  abs_speed = abs(get_speed());
+  abs_speed = abs(get_speed(true));
   speed_setpoint = abs(_speed_setpoint);
   // reset PID (I and D terms) upon stopping the motor
   if (speed_setpoint == 0)
@@ -101,9 +102,8 @@ void Motor::set_speed(float _speed_setpoint)
 void Motor::reset()
 {
   encoder.write(0);
-  count = 0;
-  delta_angle = 0.0;
-  speed = 0.0;
+  slow_sample.reset();
+  fast_sample.reset();
   abs_speed = 0.0;
   speed_setpoint = 0.0;
   output = 0.0;
