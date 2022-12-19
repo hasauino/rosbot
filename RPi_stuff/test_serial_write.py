@@ -11,15 +11,15 @@ VEL_COMMAND_ID = 0x00
 HEAD_COMMAND_ID = 0x03
 
 HEAD_INCREMENT = 40
-DEFAULT_V = 0.05
-DEFAULT_W = 0.05
+DEFAULT_V = 0.3
+DEFAULT_W = 5.0
 
 def speed_command(v, w):
     msg = bytearray([FIRST_BYTE, SECOND_BYTE])
     msg.append(9)  # data length
     msg.append(VEL_COMMAND_ID)  # command id
-    msg.extend(list(struct.pack('f', v)))
-    msg.extend(list(struct.pack('f', w)))
+    msg.extend(list(struct.pack('f', v))[::-1])
+    msg.extend(list(struct.pack('f', w))[::-1])
     msg.append(0)  # checksum (dummy)
     ser.write(msg)
 
