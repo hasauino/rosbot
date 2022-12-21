@@ -1,8 +1,11 @@
+import base64
 import logging
+import multiprocessing
 import struct
 import threading
 import time
 
+import cv2
 import serial
 
 FIRST_BYTE = 0x7B
@@ -50,9 +53,42 @@ class Robot:
         self.serial_writer_rate = serial_writer_rate
         self.safe_mode = safe_mode
         self.reader_thread = threading.Thread(target=self.reader, daemon=True)
-        self.reader_thread.start()
         self.writer_thread = threading.Thread(target=self.writer, daemon=True)
+        ctx = multiprocessing.get_context('spawn')
+        self.camera_queue = ctx.Queue(maxsize=2)
+        self.camera_process = ctx.Process(target=self.camera_reader,
+                                          args=(self.camera_queue, ))
+        self.reader_thread.start()
         self.writer_thread.start()
+        self.camera_process.start()
+        self.last_image = None
+
+    def get_image(self):
+        try:
+            self.last_image = self.camera_queue.get(block=False)
+        except Exception:
+            pass
+        return self.last_image
+
+    @staticmethod
+    def camera_reader(camera_queue):
+        logging.info("Started camera loop")
+        cap = cv2.VideoCapture("/dev/video0")
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 128)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 72)
+        while True:
+            try:
+                ret, frame = cap.read()
+            except Exception as e:
+                logging.error(f"Could not grap camera frame. Error: {e}")
+            frame = cv2.flip(frame, 0)
+            if not ret:
+                logging.error("Failed in reading camera frame")
+                continue
+            _, buffer = cv2.imencode(".{}".format("jpg"), frame)
+            img_as_text = base64.b64encode(buffer)
+            data = f"data:image/jpg;base64,{img_as_text.decode('utf-8')}"
+            camera_queue.put(data, block=True, timeout=None)
 
     def set_speed(self, v, w):
         self.speed_timestamp = time.time()
@@ -149,3 +185,4 @@ class Robot:
         self.stop()
         self.serial_reader.close()
         self.serial_writer.close()
+        self.camera_process.kill()

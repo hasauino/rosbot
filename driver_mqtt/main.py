@@ -15,7 +15,7 @@ def main():
     mqttclient.connect(host=os.environ.get("BROKER_IP", "localhost"),
                        port=int(os.environ.get("BROKER_PORT", "1883")),
                        keepalive=1)
-    mqttclient.loop_forever()
+    mqttclient.spin()
 
 
 if __name__ == "__main__":
