@@ -1,7 +1,7 @@
 import argparse
-import logging
 import os
 
+import log_factory
 from mqtt_client import Client
 from robot import Robot
 
@@ -23,5 +23,5 @@ if __name__ == "__main__":
                                      description='Control robot via mqtt')
     parser.add_argument('-l', '--log-level', type=str, default="info")
     args = parser.parse_args()
-    logging.basicConfig(level=getattr(logging, args.log_level.upper()))
+    log_factory.set_level(args.log_level)
     main()

@@ -1,5 +1,4 @@
 import base64
-import logging
 import multiprocessing
 import struct
 import threading
@@ -7,6 +6,8 @@ import time
 
 import cv2
 import serial
+
+import log_factory
 
 FIRST_BYTE = 0x7B
 SECOND_BYTE = 0x37
@@ -26,6 +27,7 @@ class Robot:
         serial_writer_rate=10,
         safe_mode=True,
     ) -> None:
+        self.logger = log_factory.factory("robot")
         self.serial_reader = serial.Serial(serial_port,
                                            baudrate,
                                            exclusive=False,
@@ -61,6 +63,7 @@ class Robot:
         self.reader_thread.start()
         self.writer_thread.start()
         self.camera_process.start()
+        self.logger.info("Started camera loop")
         self.last_image = None
 
     def get_image(self):
@@ -72,7 +75,6 @@ class Robot:
 
     @staticmethod
     def camera_reader(camera_queue):
-        logging.info("Started camera loop")
         cap = cv2.VideoCapture("/dev/video0")
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 128)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 72)
@@ -80,10 +82,9 @@ class Robot:
             try:
                 ret, frame = cap.read()
             except Exception as e:
-                logging.error(f"Could not grap camera frame. Error: {e}")
+                continue
             frame = cv2.flip(frame, 0)
             if not ret:
-                logging.error("Failed in reading camera frame")
                 continue
             _, buffer = cv2.imencode(".{}".format("jpg"), frame)
             img_as_text = base64.b64encode(buffer)
@@ -110,7 +111,7 @@ class Robot:
             self.writer_thread.join()
 
     def writer(self):
-        logging.info("Starting serial writer thread")
+        self.logger.info("Starting serial writer thread")
         while self.is_running:
             if self.safe_mode:
                 if (time.time() - self.speed_timestamp) > self.heartbeat:
@@ -120,24 +121,24 @@ class Robot:
             self._send_speed(self.cmd_v, self.cmd_w)
             self._send_head(self.head_angle)
             time.sleep(1.0 / self.serial_writer_rate)
-        logging.info("Stopping serial writer thread")
+        self.logger.info("Stopping serial writer thread")
 
     def reader(self):
-        logging.info("Starting serial reader thread")
+        self.logger.info("Starting serial reader thread")
         while self.is_running:
-            logging.debug("wating serial msg..")
+            self.logger.trace("wating serial msg..")
             rec = self.serial_reader.read()[0]
             if rec != FIRST_BYTE:
                 continue
             rec = self.serial_reader.read()[0]
             if rec != SECOND_BYTE:
                 continue
-            logging.debug("Got a serial msg.. Reading it..")
+            self.logger.trace("Got a serial msg.. Reading it..")
             length = self.serial_reader.read()[0]
             data = self.serial_reader.read(length)
             checksum = self.serial_reader.read()[0]
             if not self.check_data(data, checksum):
-                logging.warning(
+                self.logger.warning(
                     "corrupted data received... will ignore this message")
                 continue
             delta_s_r = struct.unpack('f', data[0:4])[0]
@@ -153,8 +154,8 @@ class Robot:
             self.update_states(delta_s_r, delta_s_l, w_r, w_l, ax, ay, az, gx,
                                gy, gz)
             self.imu_temp = struct.unpack('f', data[28:32])[0]
-            logging.debug("Finished reading serial message")
-        logging.info("Stopping serial reading thread")
+            self.logger.trace("Finished reading serial message")
+        self.logger.info("Stopping serial reading thread")
 
     def _send_speed(self, v, w):
         msg = bytearray([FIRST_BYTE, SECOND_BYTE])
