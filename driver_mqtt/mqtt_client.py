@@ -19,9 +19,11 @@ class Client(mqtt.Client):
         self.logger = log_factory.factory("mqttclient")
         super().__init__("rosbot",
                          clean_session=True,
+                         transport="websockets",
                          reconnect_on_failure=True)
 
     def handle_cmd_vel(self, payload_json):
+        self.logger.debug("Got cmd vel msg")
         try:
             payload = json.loads(payload_json)
             self.robot.set_speed(
@@ -32,6 +34,7 @@ class Client(mqtt.Client):
             self.logger.error("Received wrong format of cmd vel mqtt msg")
 
     def handle_cmd_head(self, payload_json):
+        self.logger.debug("Got cmd head msg")
         try:
             payload = json.loads(payload_json)
             self.robot.set_head(angle=payload["angle"])
