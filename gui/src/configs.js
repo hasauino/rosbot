@@ -4,7 +4,9 @@ const CMD_VEL_TOPIC = "/robot/command/vel"
 const CMD_HEAD_TOPIC = "/robot/command/head"
 const ROBOT_STATE_TOPIC = "robot/data/state"
 const CAMERA_TOPIC = "robot/data/camera"
-const CMD_RATE = 20
+const CMD_RATE = 100
+const HEAD_DIFF = 30
+const HEAD_ZERO = 90
 
 export default {
     ROBOT_WIDTH: ROBOT_WIDTH,
@@ -13,5 +15,7 @@ export default {
     CMD_HEAD_TOPIC: CMD_HEAD_TOPIC,
     ROBOT_STATE_TOPIC: ROBOT_STATE_TOPIC,
     CAMERA_TOPIC: CAMERA_TOPIC,
-    CMD_RATE: CMD_RATE
+    CMD_RATE: CMD_RATE,
+    HEAD_ZERO: HEAD_ZERO,
+    HEAD_DIFF: HEAD_DIFF
 }
