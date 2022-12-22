@@ -75,15 +75,19 @@ export default {
     },
     onConnect() {
       console.log("Connection successful");
-      setInterval(this.publish_commands, Configs.CMD_RATE);
+      setInterval(this.publish_commands, 1.0 / Configs.CMD_RATE);
+      this.client.subscribe(Configs.CAMERA_TOPIC);
+      console.log("Subscriber to state topic");
     },
     onConnectionLost(responseObject) {
-      if (responseObject.errorCode !== 0) {
-        console.log("onConnectionLost:" + responseObject.errorMessage);
-      }
     },
     onMessageArrived(message) {
-      console.log("onMessageArrived:" + message.payloadString);
+      if (message.destinationName == Configs.CAMERA_TOPIC) {
+        this.handleCameraMsg(message.payloadString);
+      }
+    },
+    handleCameraMsg(img) {
+      this.camera_img = img;
     }
   },
   mounted() {
@@ -125,7 +129,6 @@ export default {
       </div>
       <div class="columns is-mobile toggles_component box">
         <div class="column">
-          First column
         </div>
       </div>
 
