@@ -66,6 +66,36 @@ export default {
     setInterval(this.publish_commands, 100);
     document.addEventListener('keydown', this.handleKeyPress);
     document.addEventListener('keyup', this.handleKeyRelease);
+
+
+    // Create a client instance
+    var client = new Paho.MQTT.Client("217.76.51.145", 8010, "clientId");
+    // set callback handlers
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+
+    // connect the client
+    client.connect({ onSuccess: onConnect, userName: "admin", password: "psk21@ulvd5496P" });
+
+
+    // called when the client connects
+    function onConnect() {
+      // Once a connection has been made, make a subscription and send a message.
+      console.log("onConnect");
+    }
+
+    // called when the client loses its connection
+    function onConnectionLost(responseObject) {
+      if (responseObject.errorCode !== 0) {
+        console.log("onConnectionLost:" + responseObject.errorMessage);
+      }
+    }
+    // called when a message arrives
+    function onMessageArrived(message) {
+      console.log("onMessageArrived:" + message.payloadString);
+    }
+
+
   },
   components: {
     ControlButton
