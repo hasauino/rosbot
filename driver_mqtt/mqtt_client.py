@@ -8,7 +8,7 @@ import log_factory
 
 class Client(mqtt.Client):
 
-    def __init__(self, robot, rate=5) -> None:
+    def __init__(self, robot, rate=50) -> None:
         self.robot = robot
         self.cmd_vel_topic = "/robot/command/vel"
         self.cmd_head_topic = "/robot/command/head"
