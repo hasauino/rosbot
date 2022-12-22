@@ -42,11 +42,30 @@ export default {
     },
     right_released() {
       this.cmd_right_speed = this.cmd_multiplier * 0.0;
+    },
+    handleKeyPress(event) {
+      if (event.keyCode === 37) {
+        this.left_pressed();
+      }
+      if (event.keyCode === 39) {
+        this.right_pressed();
+      }
+
+    },
+    handleKeyRelease(event) {
+      if (event.keyCode === 37) {
+        this.left_released();
+      }
+      if (event.keyCode === 39) {
+        this.right_released();
+      }
     }
 
   },
   mounted() {
     setInterval(this.publish_commands, 100);
+    document.addEventListener('keydown', this.handleKeyPress);
+    document.addEventListener('keyup', this.handleKeyRelease);
   },
   components: {
     ControlButton
