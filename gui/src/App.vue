@@ -23,13 +23,16 @@ export default {
       var v = (this.cmd_left_speed + this.cmd_right_speed) / 2.0;
       var width = Configs.ROBOT_WIDTH;
       var w = (this.cmd_right_speed - this.cmd_left_speed) / width;
-      return { v: v, w: w };
+      var message = new Paho.MQTT.Message(JSON.stringify({ v: v, w: w }));
+      message.destinationName = Configs.CMD_VEL_TOPIC;
+      return message;
 
     }
   },
   methods: {
     publish_commands() {
-      //console.log(this.cmd_vel);
+      console.log("publishing.." + this.cmd_left_speed + "  ---  " + this.cmd_right_speed);
+      this.client.send(this.cmd_vel);
     },
     left_pressed() {
       this.cmd_left_speed = this.cmd_multiplier * Configs.SPEED;
@@ -59,41 +62,31 @@ export default {
       if (event.keyCode === 39) {
         this.right_released();
       }
-    }
-
-  },
-  mounted() {
-    setInterval(this.publish_commands, 100);
-    document.addEventListener('keydown', this.handleKeyPress);
-    document.addEventListener('keyup', this.handleKeyRelease);
-
-
-    // Create a client instance
-    var client = new Paho.MQTT.Client("217.76.51.145", 8010, "clientId");
-    // set callback handlers
-    client.onConnectionLost = onConnectionLost;
-    client.onMessageArrived = onMessageArrived;
-
-    // connect the client
-    client.connect({ onSuccess: onConnect, userName: "admin", password: "psk21@ulvd5496P" });
-
-
-    // called when the client connects
-    function onConnect() {
-      // Once a connection has been made, make a subscription and send a message.
-      console.log("onConnect");
-    }
-
-    // called when the client loses its connection
-    function onConnectionLost(responseObject) {
+    },
+    onConnect() {
+      console.log("Connection successful");
+      setInterval(this.publish_commands, Configs.CMD_RATE);
+    },
+    onConnectionLost(responseObject) {
       if (responseObject.errorCode !== 0) {
         console.log("onConnectionLost:" + responseObject.errorMessage);
       }
-    }
-    // called when a message arrives
-    function onMessageArrived(message) {
+    },
+    onMessageArrived(message) {
       console.log("onMessageArrived:" + message.payloadString);
     }
+  },
+  mounted() {
+    document.addEventListener('keydown', this.handleKeyPress);
+    document.addEventListener('keyup', this.handleKeyRelease);
+    // Create a client instance
+    this.client = new Paho.MQTT.Client("217.76.51.145", 8010, "clientId");
+    // set callback handlers
+    this.client.onConnectionLost = this.onConnectionLost;
+    this.client.onMessageArrived = this.onMessageArrived;
+
+    // connect the client
+    this.client.connect({ onSuccess: this.onConnect, userName: "admin", password: "psk21@ulvd5496P" });
 
 
   },
