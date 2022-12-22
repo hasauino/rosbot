@@ -19,11 +19,11 @@ export default {
         },
         handleTouchStart() {
             this.$el.querySelector("button").classList.add("is-active");
-            this.handleStart;
+            this.handleStart();
         },
         handleTouchEnd() {
             this.$el.querySelector("button").classList.remove("is-active");
-            this.handleEnd;
+            this.handleEnd();
         }
 
 
