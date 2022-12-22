@@ -23,7 +23,7 @@ class Robot:
         serial_port="/dev/ttyS0",
         baudrate=115200,
         timeout=1.0,
-        heartbeat=0.5,
+        heartbeat=1.0,
         serial_writer_rate=10,
         safe_mode=True,
     ) -> None:
