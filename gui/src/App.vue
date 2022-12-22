@@ -100,7 +100,7 @@ export default {
     this.client.onMessageArrived = this.onMessageArrived;
 
     // connect the client
-    this.client.connect({ onSuccess: this.onConnect, userName: "admin", password: "psk21@ulvd5496P" });
+    this.client.connect({ onSuccess: this.onConnect, userName: "admin", password: "foobar12345678" });
 
 
   },
