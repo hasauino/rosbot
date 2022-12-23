@@ -26,12 +26,16 @@ export default {
       var w = (this.cmd_right_speed - this.cmd_left_speed) / width;
       var message = new Paho.MQTT.Message(JSON.stringify({ v: v, w: w }));
       message.destinationName = Configs.CMD_VEL_TOPIC;
+      message.qos = 0
+      message.retained = false      
       return message;
 
     },
     cmd_head() {
       var message = new Paho.MQTT.Message(JSON.stringify({ angle: this.head }));
       message.destinationName = Configs.CMD_HEAD_TOPIC;
+      message.qos = 0
+      message.retained = false      
       return message;
     },
   },
@@ -76,7 +80,7 @@ export default {
     onConnect() {
       console.log("Connection successful");
       setInterval(this.publish_commands, 1.0 / Configs.CMD_RATE);
-      this.client.subscribe(Configs.CAMERA_TOPIC);
+      this.client.subscribe(Configs.CAMERA_TOPIC, 0);
       console.log("Subscriber to state topic");
     },
     onConnectionLost(responseObject) {

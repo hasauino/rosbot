@@ -4,7 +4,7 @@ const CMD_VEL_TOPIC = "/robot/command/vel"
 const CMD_HEAD_TOPIC = "/robot/command/head"
 const ROBOT_STATE_TOPIC = "/robot/data/state"
 const CAMERA_TOPIC = "/robot/data/camera"
-const CMD_RATE = 50
+const CMD_RATE = 2
 const HEAD_DIFF = 30
 const HEAD_ZERO = 90
 
