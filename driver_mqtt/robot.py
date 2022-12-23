@@ -23,7 +23,7 @@ class Robot:
         serial_port="/dev/ttyS0",
         baudrate=115200,
         timeout=1.0,
-        heartbeat=1.0,
+        heartbeat=2.0,
         serial_writer_rate=10,
         safe_mode=True,
     ) -> None:
@@ -77,16 +77,17 @@ class Robot:
     def camera_reader(camera_queue):
         cap = cv2.VideoCapture("/dev/video0")
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 128)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 64)
         while True:
             try:
                 ret, frame = cap.read()
             except Exception as e:
                 continue
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             frame = cv2.flip(frame, 0)
             if not ret:
                 continue
-            _, buffer = cv2.imencode(".{}".format("jpg"), frame)
+            _, buffer = cv2.imencode(".jpg", frame,
+                                     [int(cv2.IMWRITE_JPEG_QUALITY), 15])
             img_as_text = base64.b64encode(buffer)
             data = f"data:image/jpg;base64,{img_as_text.decode('utf-8')}"
             camera_queue.put(data, block=True, timeout=None)
