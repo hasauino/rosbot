@@ -31,7 +31,7 @@ class Robot:
         self.serial_reader = serial.Serial(serial_port,
                                            baudrate,
                                            exclusive=False,
-                                           timeout=timeout)
+                                           timeout=None)
         self.serial_writer = serial.Serial(serial_port,
                                            baudrate,
                                            exclusive=False,
@@ -77,7 +77,7 @@ class Robot:
     def camera_reader(camera_queue):
         cap = cv2.VideoCapture("/dev/video0")
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 128)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 72)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 64)
         while True:
             try:
                 ret, frame = cap.read()
