@@ -23,9 +23,10 @@ class Client(mqtt.Client):
                          reconnect_on_failure=True)
 
     def handle_cmd_vel(self, payload_json):
-        self.logger.debug("Got cmd vel msg")
         try:
             payload = json.loads(payload_json)
+            self.logger.debug(
+                f"Got cmd vel msg v: {payload['v']}  w: {payload['w']}")
             self.robot.set_speed(
                 v=payload["v"],
                 w=payload["w"],
@@ -34,17 +35,17 @@ class Client(mqtt.Client):
             self.logger.error("Received wrong format of cmd vel mqtt msg")
 
     def handle_cmd_head(self, payload_json):
-        self.logger.debug("Got cmd head msg")
         try:
             payload = json.loads(payload_json)
+            self.logger.debug(f"Got cmd head msg  angle: {payload['angle']}")
             self.robot.set_head(angle=payload["angle"])
         except Exception:
             self.logger.error("Received wrong format of cmd head mqtt msg")
 
     def on_connect(self, client, userdata, flags, rc):
         self.logger.info("Connected to mqtt broker!")
-        self.subscribe(self.cmd_vel_topic, qos=1)
-        self.subscribe(self.cmd_head_topic, qos=1)
+        self.subscribe(self.cmd_vel_topic, qos=0)
+        self.subscribe(self.cmd_head_topic, qos=0)
 
     def on_message(self, client, userdata, msg):
         if msg.topic == self.cmd_vel_topic:
@@ -72,6 +73,6 @@ class Client(mqtt.Client):
                          payload=img_str,
                          qos=0,
                          retain=False)
-            self.logger.debug("published!")
+            self.logger.trace("published!")
             time.sleep(1.0 / self.rate)
         self.loop_stop()
