@@ -42,16 +42,16 @@ export default {
       this.client.send(this.cmd_head);
     },
     left_pressed() {
-      this.cmd_left_speed = this.cmd_multiplier * Configs.SPEED;
-    },
-    left_released() {
-      this.cmd_left_speed = this.cmd_multiplier * 0.0;
-    },
-    right_pressed() {
       this.cmd_right_speed = this.cmd_multiplier * Configs.SPEED;
     },
-    right_released() {
+    left_released() {
       this.cmd_right_speed = this.cmd_multiplier * 0.0;
+    },
+    right_pressed() {
+      this.cmd_left_speed = this.cmd_multiplier * Configs.SPEED;
+    },
+    right_released() {
+      this.cmd_left_speed = this.cmd_multiplier * 0.0;
     },
     move_head(angle) {
       this.head = angle;
