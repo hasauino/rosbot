@@ -27,7 +27,7 @@ export default {
       var message = new Paho.MQTT.Message(JSON.stringify({ v: v, w: w }));
       message.destinationName = Configs.CMD_VEL_TOPIC;
       message.qos = 0
-      message.retained = false      
+      message.retained = false
       return message;
 
     },
@@ -35,7 +35,7 @@ export default {
       var message = new Paho.MQTT.Message(JSON.stringify({ angle: this.head }));
       message.destinationName = Configs.CMD_HEAD_TOPIC;
       message.qos = 0
-      message.retained = false      
+      message.retained = false
       return message;
     },
   },
@@ -98,13 +98,13 @@ export default {
     document.addEventListener('keydown', this.handleKeyPress);
     document.addEventListener('keyup', this.handleKeyRelease);
     // Create a client instance
-    this.client = new Paho.MQTT.Client("217.76.51.145", 8010, 'conroller' + Math.random());
+    this.client = new Paho.MQTT.Client("hasauino.ddns.net", 8010, 'controller' + Math.random());
     // set callback handlers
     this.client.onConnectionLost = this.onConnectionLost;
     this.client.onMessageArrived = this.onMessageArrived;
 
     // connect the client
-    this.client.connect({ onSuccess: this.onConnect, userName: "admin", password: "foobar12345678" });
+    this.client.connect({ onSuccess: this.onConnect, userName: "admin", password: "foobar12345678", useSSL: true });
 
 
   },
