@@ -13,7 +13,7 @@ def main():
                                password=os.environ.get("BROKER_PASSWORD",
                                                        "pass"))
     mqttclient.connect(host=os.environ.get("BROKER_IP", "localhost"),
-                       port=int(os.environ.get("BROKER_PORT", "1883")),
+                       port=1883,
                        keepalive=1)
     mqttclient.spin()
 
