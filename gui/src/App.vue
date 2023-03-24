@@ -98,7 +98,7 @@ export default {
     document.addEventListener('keydown', this.handleKeyPress);
     document.addEventListener('keyup', this.handleKeyRelease);
     // Create a client instance
-    this.client = new Paho.MQTT.Client("217.76.51.145", 8010, 'controller' + Math.random());
+    this.client = new Paho.MQTT.Client("hasauino.ddns.net", 8010, 'controller' + Math.random());
     // set callback handlers
     this.client.onConnectionLost = this.onConnectionLost;
     this.client.onMessageArrived = this.onMessageArrived;
